@@ -1,0 +1,94 @@
+<%- include('_head', { title: 'История заявок', page: 'history' }) %>
+
+<div class="page-header">
+  <h1 class="page-title"><i data-lucide="clipboard-list"></i> История заявок</h1>
+</div>
+
+<!-- Фильтры -->
+<div class="card" style="padding:16px 24px">
+  <form method="GET" class="form-row">
+    <div class="form-group">
+      <label>Склад</label>
+      <select class="form-control" name="warehouse">
+        <option value="">Все</option>
+        <% warehouses.forEach(function(w) { %>
+          <option value="<%= w.id %>" <%= filters.warehouse == w.id ? 'selected' : '' %>><%= w.name %></option>
+        <% }) %>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>Сотрудник</label>
+      <input class="form-control" name="employee" value="<%= filters.employee || '' %>" placeholder="Имя...">
+    </div>
+    <div class="form-group">
+      <label>Статус</label>
+      <select class="form-control" name="status">
+        <option value="">Все</option>
+        <option value="pending" <%= filters.status === 'pending' ? 'selected' : '' %>>Ожидает</option>
+        <option value="accepted" <%= filters.status === 'accepted' ? 'selected' : '' %>>Принята</option>
+        <option value="rejected" <%= filters.status === 'rejected' ? 'selected' : '' %>>Отклонена</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label>От</label>
+      <input class="form-control" type="date" name="date_from" value="<%= filters.date_from || '' %>">
+    </div>
+    <div class="form-group">
+      <label>До</label>
+      <input class="form-control" type="date" name="date_to" value="<%= filters.date_to || '' %>">
+    </div>
+    <div style="align-self:flex-end">
+      <button type="submit" class="btn btn-secondary">Найти</button>
+    </div>
+  </form>
+</div>
+
+<div class="card">
+  <table>
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Дата</th>
+        <th>Склад</th>
+        <th>Товар</th>
+        <th>Кол-во</th>
+        <th>Причина</th>
+        <th>Сотрудник</th>
+        <th>Статус</th>
+        <th>Фото</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% requests.forEach(function(r) { %>
+      <tr>
+        <td><%= r.id %></td>
+        <td><%= new Date(r.created_at).toLocaleString('ru-RU', { dateStyle: 'short', timeStyle: 'short' }) %></td>
+        <td><%= r.warehouses ? r.warehouses.name : '—' %></td>
+        <td><%= r.items ? r.items.name : '—' %></td>
+        <td><%= r.quantity %> шт.</td>
+        <td><%= r.reason %></td>
+        <td>
+          <%= r.tg_name || '—' %>
+          <% if (r.tg_username) { %><br><small style="color:#888">@<%= r.tg_username %></small><% } %>
+        </td>
+        <td>
+          <% if (r.status === 'accepted') { %>
+            <span class="badge badge-green">Принята</span>
+          <% } else if (r.status === 'rejected') { %>
+            <span class="badge badge-red">Отклонена</span>
+          <% } else { %>
+            <span class="badge badge-yellow">Ожидает</span>
+          <% } %>
+        </td>
+        <td>
+          <% if (r.photo_file_id) { %>
+            <span title="file_id: <%= r.photo_file_id %>"><i data-lucide="image"></i></span>
+          <% } %>
+        </td>
+      </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
+
+<%- include('_foot') %>

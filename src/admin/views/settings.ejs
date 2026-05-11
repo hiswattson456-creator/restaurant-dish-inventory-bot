@@ -1,0 +1,49 @@
+<%- include('_head', { title: 'Настройки', page: 'settings' }) %>
+
+<div class="page-header">
+  <h1 class="page-title"><i data-lucide="settings"></i> Настройки</h1>
+</div>
+
+<% if (message) { %>
+  <div class="alert alert-success"><%= message %></div>
+<% } %>
+<% if (error) { %>
+  <div class="alert alert-error"><%= error %></div>
+<% } %>
+
+<div class="card">
+  <h3 style="margin-bottom:20px;display:flex;align-items:center;gap:8px"><i data-lucide="key-round"></i> Пароль входа в бот</h3>
+  <p style="color:#888;font-size:14px;margin-bottom:20px">Этот пароль вводят сотрудники при первом запуске бота.</p>
+  <form action="/admin/settings/bot-password" method="POST" style="max-width:400px">
+    <div class="form-group">
+      <label>Новый пароль</label>
+      <input class="form-control" type="password" name="new_password" required minlength="4">
+    </div>
+    <div class="form-group">
+      <label>Повторите пароль</label>
+      <input class="form-control" type="password" name="confirm_password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Сменить пароль бота</button>
+  </form>
+</div>
+
+<div class="card">
+  <h3 style="margin-bottom:20px;display:flex;align-items:center;gap:8px"><i data-lucide="shield"></i> Пароль веб-adminки</h3>
+  <form action="/admin/settings/admin-password" method="POST" style="max-width:400px">
+    <div class="form-group">
+      <label>Текущий пароль</label>
+      <input class="form-control" type="password" name="current_password" required>
+    </div>
+    <div class="form-group">
+      <label>Новый пароль</label>
+      <input class="form-control" type="password" name="new_password" required minlength="6">
+    </div>
+    <div class="form-group">
+      <label>Повторите пароль</label>
+      <input class="form-control" type="password" name="confirm_password" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Сменить пароль adminки</button>
+  </form>
+</div>
+
+<%- include('_foot') %>
